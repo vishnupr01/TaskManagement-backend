@@ -12,7 +12,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Ensure no trailing slash in the allowed origins
-const allowOrigins = ['https://task-manage-ment-front-35w50bfmq-vishnu-p-rs-projects.vercel.app'];
+const allowOrigins = ['https://task-manage-ment-front-end.vercel.app'];
 
 app.use(
   cors({
