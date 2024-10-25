@@ -69,6 +69,19 @@ export class TaskController {
     }
   }
 
+  async editTask(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+        const taskId = req.params.taskId; // Get taskId from URL parameters
+        const taskData = req.body.taskData; // Get taskData from request body
+
+        // Call the use case to edit the task
+        const updatedTask = await this.taskUsecase.editTask(taskId, taskData);
+        res.status(200).json({ status: "success", data: updatedTask });
+    } catch (error: any) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 
 
 }       

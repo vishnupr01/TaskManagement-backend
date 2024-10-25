@@ -6,5 +6,6 @@ export default interface ITaskUseCase{
   getTasksByManager(managerId: string): Promise<ITask[]> 
   deleteTask(taskId: string): Promise<boolean> 
   getAssignedUsersForManager(taskId: string): Promise<any[]>
+  editTask(taskId: string, taskData: Partial<ITask>): Promise<ITask>
   
 }

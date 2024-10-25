@@ -7,23 +7,23 @@ export class TaskRepository implements ITaskRepository {
   async getTaskAssignedUsersForManager(taskId: string): Promise<any[]> {
     const taskObjectId = new mongoose.Types.ObjectId(taskId);
     console.log("Task ID for assigned users:", taskObjectId);
-  
+
     try {
       // Step 1: Find the task and get the list of assigned user IDs
       const task = await Task.findById(taskObjectId).select('assignedTo');
-  
+
       if (!task) {
         throw new Error("Task not found");
       }
-  
+
       const assignedUserIds = task.assignedTo || []; // Array of user IDs assigned to the task
-  
+
       // Step 2: Find users in the assignedUserIds list
       const assignedUsers = await mongoose.model('User').find({
         _id: { $in: assignedUserIds } // Include only users in the assignedTo list
       }).select('_id name email'); // Include only desired fields
-   console.log("assignedusers",assignedUsers);
-   
+      console.log("assignedusers", assignedUsers);
+
       return assignedUsers;
     } catch (error) {
       console.error("Error fetching assigned users:", error); // Log error for debugging
@@ -82,6 +82,28 @@ export class TaskRepository implements ITaskRepository {
     } catch (error) {
       console.error("Error deleting task:", error); // Log error for debugging
       throw error;
+    }
+  }
+  async editTask(taskId: string, taskData: Partial<ITask>): Promise<ITask> {
+    const taskObjectId = new mongoose.Types.ObjectId(taskId);
+    console.log("Editing task with ID:", taskObjectId);
+
+    try {
+      // Find the task by ID and update with the new data
+      const updatedTask = await Task.findByIdAndUpdate(
+        taskObjectId,
+        { $set: taskData }, // Use $set to update only the fields provided in taskData
+        { new: true, runValidators: true } // Options to return the updated task and run validators
+      );
+
+      if (!updatedTask) {
+        throw new Error("Task not found");
+      }
+
+      return updatedTask; // Return the updated task
+    } catch (error) {
+      console.error("Error updating task:", error); // Log error for debugging
+      throw error; // Re-throw the error for further handling
     }
   }
 }

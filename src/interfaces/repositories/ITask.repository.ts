@@ -6,5 +6,6 @@ export default interface ITaskRepository{
   getTasksCreatedByManager(managerId: string): Promise<ITask[]>
   deleteTask(taskId: string): Promise<boolean>
   getTaskAssignedUsersForManager(taskId: string): Promise<any[]>
+  editTask(taskId: string, taskData: Partial<ITask>): Promise<ITask>
   
 }

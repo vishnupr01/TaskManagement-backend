@@ -82,4 +82,19 @@ export class TaskUsecase implements ITaskUseCase {
     }
   }
 
+  async editTask(taskId: string, taskData: Partial<ITask>): Promise<ITask> {
+    try {
+        // Validate required fields if necessary (you can customize this logic)
+        if (!taskId) {
+            throw new Error("Task ID is required to edit the task");
+        }
+
+        const updatedTask = await this.taskRepository.editTask(taskId, taskData);
+        return updatedTask;
+    } catch (error) {
+        console.error("Error editing task:", error);
+        throw new Error("Task editing failed");
+    }
+}
+
 }
