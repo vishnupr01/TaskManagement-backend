@@ -148,7 +148,7 @@ export class UserUsecase implements IUserUseCase {
       const department:any=await this.departmentRepository.departmentNameExists(user.department)
       console.log("my department",department);
       
-      const payload = { id: user._id, name: user.name, role: user.role, email: user.email,departmentId:department?._id }
+      const payload = { id: user._id, name: user.name,managerId:user?.managerId, role: user.role, email: user.email,departmentId:department?._id }
       console.log(payload,"paylod logiinee");
       
       const token = createJWT(payload, 5)
