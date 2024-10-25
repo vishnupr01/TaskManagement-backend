@@ -49,6 +49,8 @@ export class UserController {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password, role } = req.body
+      console.log("email",email);
+      
       const data: IAuth = {
         email: email,
         password: password,
