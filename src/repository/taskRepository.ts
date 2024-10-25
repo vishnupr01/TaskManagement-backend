@@ -86,11 +86,11 @@ export class TaskRepository implements ITaskRepository {
   }
   async editTask(taskId: string, taskData: Partial<ITask>): Promise<ITask> {
     const taskObjectId = new mongoose.Types.ObjectId(taskId);
-    console.log("Editing task with ID:", taskObjectId);
+    console.log("Editing task with ID:", taskObjectId); 
 
     try {
       // Find the task by ID and update with the new data
-      const updatedTask = await Task.findByIdAndUpdate(
+      const updatedTask = await Task.findByIdAndUpdate( 
         taskObjectId,
         { $set: taskData }, // Use $set to update only the fields provided in taskData
         { new: true, runValidators: true } // Options to return the updated task and run validators
