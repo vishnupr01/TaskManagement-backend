@@ -32,4 +32,8 @@ router.get('/verifyToken', authMiddleware, (req: Request, res: Response, next: N
   console.log("entering...");
   userController.isUser(req, res, next)
 })
+
+router.get('/logOut',authMiddleware,(req: Request, res: Response, next: NextFunction)=>{
+  userController.logOut(req,res,next)
+})
 export default router

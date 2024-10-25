@@ -102,4 +102,19 @@ export class UserController {
     }
   }
 
+  async logOut(req: Request, res: Response, next: NextFunction) {
+    res.clearCookie('authToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none'
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none'
+    });
+    res.status(200).json({ status: 'success', message: 'Logged out successfully' });
+
+  }
+
 }
