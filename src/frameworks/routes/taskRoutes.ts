@@ -22,5 +22,7 @@ router.get('/tasksByManager', authMiddleware, (req: Request, res: Response, next
 router.delete('/deleteTasks/:taskId', authMiddleware, (req: Request, res: Response, next: NextFunction) => {
   taskController.deleteTask(req, res, next);
 });
-
+router.get('/taskAssignedEmployees', authMiddleware, (req: Request, res: Response, next: NextFunction) => {
+  taskController.getAssignedEmployees(req, res, next);
+});
 export default router

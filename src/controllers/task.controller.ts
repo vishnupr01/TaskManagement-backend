@@ -54,6 +54,20 @@ export class TaskController {
       res.status(400).json({ message: error.message });
     }
   }
+  async getAssignedEmployees(req: Request, res: Response, next: NextFunction) {
+    try {
+      const taskId = req.query.taskId as string;
+      if (!taskId) {
+        return res.status(400).json({ message: "Manager ID is required" });
+      }
+
+      // Fetch assigned users through usecase
+      const assignedUsers = await this.taskUsecase.getAssignedUsersForManager(taskId);
+      res.status(200).json({ status: "success", data: assignedUsers });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 
 
 

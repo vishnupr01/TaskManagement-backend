@@ -4,37 +4,26 @@ import ITaskRepository from "../interfaces/repositories/ITask.repository";
 import { ITask } from '../entities/task.entity';
 
 export class TaskRepository implements ITaskRepository {
-  async getAssignedUsersForManager(managerId: string): Promise<any[]> {
-    // Convert managerId to ObjectId
-    const managerObjectId = new mongoose.Types.ObjectId(managerId);
-    console.log("managerId backend", managerObjectId);
-
+  async getTaskAssignedUsersForManager(taskId: string): Promise<any[]> {
+    const taskObjectId = new mongoose.Types.ObjectId(taskId);
+    console.log("Task ID for assigned users:", taskObjectId);
+  
     try {
-      const assignedUsers = await Task.aggregate([
-        { $match: { assignedBy: managerObjectId } }, // Match tasks assigned by the manager
-        {
-          $lookup: {
-            from: 'users', // The collection name for users
-            localField: 'assignedTo', // Field in the Task collection
-            foreignField: '_id', // Field in the User collection
-            as: 'assignedUsers' // Name of the output array
-          }
-        },
-        {
-          $unwind: '$assignedUsers' // Unwind the array for better access
-        },
-        {
-          $replaceRoot: { newRoot: '$assignedUsers' } // Replace root to get user details directly
-        },
-        {
-          $group: {
-            _id: '$_id',
-            name: { $first: '$name' }, // Adjust to your user fields
-            email: { $first: '$email' }
-          }
-        }
-      ]);
-
+      // Step 1: Find the task and get the list of assigned user IDs
+      const task = await Task.findById(taskObjectId).select('assignedTo');
+  
+      if (!task) {
+        throw new Error("Task not found");
+      }
+  
+      const assignedUserIds = task.assignedTo || []; // Array of user IDs assigned to the task
+  
+      // Step 2: Find users in the assignedUserIds list
+      const assignedUsers = await mongoose.model('User').find({
+        _id: { $in: assignedUserIds } // Include only users in the assignedTo list
+      }).select('_id name email'); // Include only desired fields
+   console.log("assignedusers",assignedUsers);
+   
       return assignedUsers;
     } catch (error) {
       console.error("Error fetching assigned users:", error); // Log error for debugging
@@ -84,12 +73,12 @@ export class TaskRepository implements ITaskRepository {
       if (result.deletedCount === 0) {
         throw new Error("Task not found");
       }
-      if(result){
+      if (result) {
         return true
-      }else{
+      } else {
         return false
       }
-    
+
     } catch (error) {
       console.error("Error deleting task:", error); // Log error for debugging
       throw error;

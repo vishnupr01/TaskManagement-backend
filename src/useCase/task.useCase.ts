@@ -69,5 +69,17 @@ export class TaskUsecase implements ITaskUseCase {
       throw new Error("Task deletion failed");
     }
   }
+  async getAssignedUsersForManager(taskId: string): Promise<any[]> {
+    try {
+      if (!taskId) {
+        throw new Error("Manager ID is required");
+      }
+      const assignedUsers = await this.taskRepository.getTaskAssignedUsersForManager(taskId);
+      return assignedUsers;
+    } catch (error) {
+      console.error("Error in getAssignedUsersForManager use case:", error);
+      throw new Error("Failed to retrieve assigned users");
+    }
+  }
 
 }

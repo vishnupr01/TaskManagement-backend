@@ -8,4 +8,5 @@ export default interface IUserUseCase{
   userSigin(data: IAuth): Promise<any>
   departmentNames(): Promise<string[]> 
   
+  
 }
